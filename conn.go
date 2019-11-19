@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/tls"
 	"errors"
+	"fmt"
 	"io"
 	"math"
 	"net"
@@ -597,7 +598,11 @@ func (c *conn) connWriter() {
 
 		// keepalive timer
 		case <-keepalive:
+
 			_, err = c.net.Write(keepaliveFrame)
+			if err != nil {
+				fmt.Println(fmt.Sprintf("Err occurred with keepalive: %s", err.Error()))
+			}
 			// It would be slightly more efficient in terms of network
 			// resources to reset the timer each time a frame is sent.
 			// However, keepalives are small (8 bytes) and the interval
